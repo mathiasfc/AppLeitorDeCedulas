@@ -1,103 +1,144 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Button, StyleSheet } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import {
+  ActivityIndicator,
+  Button,
+  Clipboard,
+  Image,
+  Share,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Exponent, { Constants, ImagePicker, registerRootComponent } from 'expo';
 
-export default class CameraExample extends React.Component {
+export default class App extends React.Component {
   state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
+    image: null,
+    uploading: false,
+    text: ''
   };
 
-  async componentWillMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
-  }
-
-
-
   render() {
+    let { image } = this.state;
     //Desabilita warnings
     console.disableYellowBox = true;
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text
+          style={{
+            fontSize: 20,
+            marginBottom: 20,
+            textAlign: 'center',
+            marginHorizontal: 15,
+          }}>
+          Example: Upload ImagePicker result
+        </Text>
 
-    const { hasCameraPermission } = this.state;
-    if (hasCameraPermission === null) {
-      return <View />;
-    } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
-    } else {
-      return (
-        <View style={{ flex: 1 }}>
-          <Camera style={{ flex: 1 }} type={this.state.type}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                flexDirection: 'row',
-              }}>
+        {/*Botão para pegar uma imagem*/}
+        <Button
+          onPress={this._pickImage}
+          title="Pick an image from camera roll"
+        />
 
-              <TouchableOpacity
-                style={styles.takePhoto}
-                onPress={this.onPress}
-              >
-                {/* <Text> Touch Here </Text> */}
-              </TouchableOpacity>
+        <Button onPress={this._takePhoto} title="Take a photo" /> 
+        {/* {this._takePhoto()} */}
+        {/* {this._maybeRenderImage()} */}
+        {/* {this._maybeRenderUploadingOverlay()} */}
+        <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
+        <Text
+          style={{
+            fontSize: 20,
+            color: 'green',
+            textAlign: 'center',
+          }}>
+          {this.state.text}
+        </Text>
+        <StatusBar barStyle="default" />
+      </View>
 
-              <TouchableOpacity
-                style={styles.flipPosition}
-                onPress={() => {
-                  this.setState({
-                    type: this.state.type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back,
-                  });
-                }}>
-                <Text
-                  style={styles.flip}>
-                  {' '}Flip{' '}
-                </Text>
-              </TouchableOpacity>
 
-            </View>
-          </Camera>
-        </View>
-      );
-    }
+
+
+    );
   }
+
+  // _maybeRenderImage = () => {
+  //   let { image } = this.state;
+  //   if (!image) {
+  //     return;
+  //   }
+
+  //   return (
+  //     <View
+  //       style={{
+  //         marginTop: 30,
+  //         width: 250,
+  //         borderRadius: 3,
+  //         elevation: 2,
+  //         shadowColor: 'rgba(0,0,0,1)',
+  //         shadowOpacity: 0.2,
+  //         shadowOffset: { width: 4, height: 4 },
+  //         shadowRadius: 5,
+  //       }}>
+  //       <View
+  //         style={{
+  //           borderTopRightRadius: 3,
+  //           borderTopLeftRadius: 3,
+  //           overflow: 'hidden',
+  //         }}>
+  //         <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
+  //       </View>
+
+  //       <Text
+  //         onPress={this._copyToClipboard}
+  //         onLongPress={this._share}
+  //         style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
+  //         {image}
+  //       </Text>
+  //     </View>
+  //   );
+  // };
+
+  // _share = () => {
+  //   /*Share.share({
+  //     message: this.state.image,
+  //     title: 'Check out this photo',
+  //     url: this.state.image,
+  //   });*/
+  // };
+
+  _copyToClipboard = () => {
+    Clipboard.setString(this.state.image);
+    alert('Copied image URL to clipboard');
+  };
+
+  _takePhoto = async () => {
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: false
+    });
+
+    this._handleImagePicked(pickerResult);
+  };
+
+
+  _pickImage = async () => {
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false
+    });
+
+    this._handleImagePicked(pickerResult);
+  };
+
+  _handleImagePicked = async pickerResult => {
+    this.setState({ image: pickerResult.uri });
+
+    //...
+
+    this.setState({ text: 'valid' });
+
+  };
+
 }
 
-const styles = StyleSheet.create({
-  flip: {
-    fontSize: 18,
-    marginBottom: 10, 
-    color: 'white',
-    backgroundColor: 'green'
-  },
-  flipPosition: {
-    flex: 0.2,
-    alignSelf: 'flex-start',
-    alignItems: 'flex-start',
-    marginTop: 50
-  },
-  takePhoto: {
-    borderRadius:100,
-    flex: 1,
-    alignSelf: 'flex-end',
-    backgroundColor: 'red',
-    height: 120,
-    marginBottom: 10,
-    marginLeft: 50
-  },
-  button: {
-    flex: 0.8,
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10
-  },
-  countContainer: {
-    alignItems: 'center',
-    padding: 10
-  },
-  countText: {
-    color: '#FF00FF'
-  }
-})
