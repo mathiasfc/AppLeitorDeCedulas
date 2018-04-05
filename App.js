@@ -1,6 +1,6 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Image } from 'react-native';
 // import GalleryScreen from './GalleryScreen';
 
 const landmarkSize = 2;
@@ -111,15 +111,16 @@ export default class CameraScreen extends React.Component {
   takePicture = async function() {
     if (this.camera) {
       this.camera.takePictureAsync().then(data => {
-        FileSystem.moveAsync({
-          from: data.uri,
-          to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
-        }).then(() => {
-          this.setState({
-            photoId: this.state.photoId + 1,
-          });
-          Vibration.vibrate();
-        });
+
+        // FileSystem.moveAsync({
+        //   from: data.uri,
+        //   to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
+        // }).then(() => {
+        //   this.setState({
+        //     photoId: this.state.photoId + 1,
+        //   });
+        //   Vibration.vibrate();
+        // });
       });
     }
   };
@@ -239,10 +240,10 @@ export default class CameraScreen extends React.Component {
             paddingTop: Constants.statusBarHeight / 2,
           }}>
           <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-            <Text style={styles.flipText}> FLIP </Text>
+            <Text style={styles.flipText}> Muda câmera </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
+            <Text style={styles.flipText}> Flash: {this.state.flash} </Text>
           </TouchableOpacity>
           {/* <TouchableOpacity style={styles.flipButton} onPress={this.toggleWB.bind(this)}>
             <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
@@ -266,13 +267,17 @@ export default class CameraScreen extends React.Component {
         </View>
         <View
           style={{
-            flex: 0.1,
             paddingBottom: 0,
             backgroundColor: 'transparent',
             flexDirection: 'row',
             alignSelf: 'flex-end',
+            flex: 0.25,
+            alignSelf: 'stretch',
+            textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
             onPress={this.zoomIn.bind(this)}>
             <Text style={styles.flipText}> + </Text>
@@ -281,25 +286,28 @@ export default class CameraScreen extends React.Component {
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
             onPress={this.zoomOut.bind(this)}>
             <Text style={styles.flipText}> - </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity
             style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
             onPress={this.toggleFocus.bind(this)}>
             <Text style={styles.flipText}> AF : {this.state.autoFocus} </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
-            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
+            style={[styles.picButton, { alignSelf: 'stretch' }]}
             onPress={this.takePicture.bind(this)}>
-            <Text style={styles.flipText}> SNAP </Text>
+            {/* <Text style={styles.flipText}> LER </Text> */}
+            <Image style={styles.soundImgStyle} source={require('./imgs/sound.png')} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
+            style={[styles.galleryButton, {  alignSelf: 'stretch' }]}
             onPress={this.toggleView.bind(this)}>
-            <Text style={styles.flipText}> Gallery </Text>
+            {/* <Text style={styles.flipText}> Galeria </Text> */}
+            <Image style={styles.galleryImgStyle} source={require('./imgs/galeria.png')} />
           </TouchableOpacity>
         </View>
-        {this.renderFaces()}
-        {this.renderLandmarks()}
+        {/* Detecções de face */}
+        {/* {this.renderFaces()}
+        {this.renderLandmarks()} */}
       </Camera>
     );
   }
@@ -327,6 +335,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
+  picButton: {
+    backgroundColor: 'darkseagreen',
+    flex: 0.75,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  galleryButton: {
+    backgroundColor: 'indianred',
+    flex: 0.25,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   flipButton: {
     flex: 0.3,
     height: 40,
@@ -352,12 +372,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  picButton: {
-    backgroundColor: 'darkseagreen',
-  },
-  galleryButton: {
-    backgroundColor: 'indianred',
   },
   facesContainer: {
     position: 'absolute',
@@ -391,4 +405,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  soundImgStyle:{
+    height:48,
+    width:48
+  },
+  galleryImgStyle:{
+    height:48,
+    width:48
+  }
 });
