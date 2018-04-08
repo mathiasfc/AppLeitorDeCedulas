@@ -3,6 +3,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Image } from 'react-native';
 // import GalleryScreen from './GalleryScreen';
 
+const Sound = require('react-native-sound');
+
 const landmarkSize = 2;
 
 const flashModeOrder = {
@@ -109,6 +111,7 @@ export default class CameraScreen extends React.Component {
   }
 
   takePicture = async function() {
+    Vibration.vibrate();
     if (this.camera) {
       this.camera.takePictureAsync().then(data => {
 
@@ -240,7 +243,7 @@ export default class CameraScreen extends React.Component {
             paddingTop: Constants.statusBarHeight / 2,
           }}>
           <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-            <Text style={styles.flipText}> Muda câmera </Text>
+            <Text style={styles.flipText}> Mudar câmera </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
             <Text style={styles.flipText}> Flash: {this.state.flash} </Text>
@@ -298,12 +301,11 @@ export default class CameraScreen extends React.Component {
             {/* <Text style={styles.flipText}> LER </Text> */}
             <Image style={styles.soundImgStyle} source={require('./imgs/sound.png')} />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.galleryButton, {  alignSelf: 'stretch' }]}
             onPress={this.toggleView.bind(this)}>
-            {/* <Text style={styles.flipText}> Galeria </Text> */}
             <Image style={styles.galleryImgStyle} source={require('./imgs/galeria.png')} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {/* Detecções de face */}
         {/* {this.renderFaces()}
@@ -336,8 +338,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   picButton: {
-    backgroundColor: 'darkseagreen',
-    flex: 0.75,
+    backgroundColor: 'rgba(183, 226, 140, 0.3)',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
