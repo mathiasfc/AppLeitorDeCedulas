@@ -24,14 +24,11 @@ const wbOrder = {
   incandescent: 'auto',
 };
 
-
-
 //TODO HERE
-/*const tfImageRecognition = new tfImageRecognition({
-  model: require('./assets/tensorflow_inception_graph.pb'),
-  labels: require('./assets/tensorflow_labels.txt'),
+/*const tfImageRecognition = new TfImageRecognition({
+    model: require('./assets/tensorflow_inception_graph.pb'),
+    labels: require('./assets/tensorflow_labels.txt'),
 });*/
-
 
 export default class CameraScreen extends React.Component {
   state = {
@@ -328,6 +325,7 @@ export default class CameraScreen extends React.Component {
   render() {
     //renderTensorflow();
     
+
     console.disableYellowBox = true;
     const cameraScreenContent = this.state.permissionsGranted
       ? this.renderCamera()

@@ -24,6 +24,13 @@
     "react-native": "0.54.0",
     "react-native-camera": "^0.10.0",
     "react-native-sound": "^0.10.9",
-    "react-native-tensorflow": "^0.1.6"
+    "react-native-tensorflow": "^0.1.6",
+    "uuid": "^3.2.1"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/tensorflow_inception_graph.pb",
+      "./assets/tensorflow_labels.txt"
+    ]
   }
 }
