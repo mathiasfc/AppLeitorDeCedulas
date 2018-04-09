@@ -1,9 +1,10 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Image } from 'react-native';
+import { TfImageRecognition } from 'react-native-tensorflow';
 // import GalleryScreen from './GalleryScreen';
 
-const Sound = require('react-native-sound');
+//const Sound = require('react-native-sound');
 
 const landmarkSize = 2;
 
@@ -22,6 +23,15 @@ const wbOrder = {
   fluorescent: 'incandescent',
   incandescent: 'auto',
 };
+
+
+
+//TODO HERE
+/*const tfImageRecognition = new tfImageRecognition({
+  model: require('./assets/tensorflow_inception_graph.pb'),
+  labels: require('./assets/tensorflow_labels.txt'),
+});*/
+
 
 export default class CameraScreen extends React.Component {
   state = {
@@ -134,6 +144,7 @@ export default class CameraScreen extends React.Component {
   renderGallery() {
     // return <GalleryScreen onPress={this.toggleView.bind(this)} />;
   }
+
 
   renderFace({ bounds, faceID, rollAngle, yawAngle }) {
     return (
@@ -315,6 +326,8 @@ export default class CameraScreen extends React.Component {
   }
 
   render() {
+    //renderTensorflow();
+    
     console.disableYellowBox = true;
     const cameraScreenContent = this.state.permissionsGranted
       ? this.renderCamera()
